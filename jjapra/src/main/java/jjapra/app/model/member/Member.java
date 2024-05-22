@@ -30,4 +30,6 @@ public class Member {
     private String email;
     @Column(nullable = false, length = 30)
     private String phone_num;
+    @Column(nullable = false)
+    private boolean is_admin = false;
 }

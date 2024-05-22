@@ -1,5 +1,6 @@
 package jjapra.app.service;
 
+import jjapra.app.dto.project.AddProjectMemberRequest;
 import jjapra.app.model.member.Member;
 import jjapra.app.model.member.Role;
 import jjapra.app.model.project.Project;
@@ -27,8 +28,8 @@ public class ProjectMemberService {
         return memberRepository.findById(id).orElse(null);
     }
 
-    public ProjectMember save(Role role, Project project, Member member) {
-        return projectMemberRepository.save(role.toEntity(project, member));
+    public ProjectMember save(AddProjectMemberRequest request, Project project, Member member) {
+        return projectMemberRepository.save(request.toEntity(project, member));
     }
 
     public ProjectMember save(ProjectMember projectMember) {

@@ -27,16 +27,21 @@ public class ProjectController {
     public ResponseEntity<List<ProjectMember>> getProjects(HttpSession session) {
         Member loggedInUser = (Member) session.getAttribute("loggedInUser");
         List<ProjectMember> projects = projectMemberService.findByMemberId(((Member) loggedInUser).getId());
-        return ResponseEntity.status(HttpStatus.OK).body(projects);
+        return ResponseEntity.ok().body(projects);
     }
 
     @PostMapping("")
     public ResponseEntity<Project> addProject(@RequestBody AddProjectRequest request, HttpSession session) {
-        // admin인 경우에만 프로젝트 생성할 수 있도록 코드 추가하기
+        // admin이 아닌 경우 401 Unauthorized
+        if (!((Member) session.getAttribute("loggedInUser")).is_admin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        // title이 비어있는 경우 400 Bad Request
         if (request.getTitle().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Project project = projectService.findByTitle(request.getTitle());
+        // 이미 존재하는 프로젝트인 경우 400 Bad Request
         if (project != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -54,9 +59,11 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProject(@PathVariable("id") Integer id, HttpSession session) {
         List<ProjectMember> projectMembers = projectMemberService.findByProjectId(id);
+        // 프로젝트가 존재하지 않는 경우 404 Not Found
         if (projectMembers.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        // 프로젝트에 속하지 않은 경우 403 Forbidden
         if (projectMembers.stream().noneMatch(pm -> pm.getMember().getId().equals((
                 (Member) session.getAttribute("loggedInUser")).getId()))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
@@ -68,9 +75,11 @@ public class ProjectController {
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable("id") Integer id, @RequestBody AddProjectRequest request, HttpSession session) {
         List<ProjectMember> projectMembers = projectMemberService.findByProjectId(id);
+        // 프로젝트가 존재하지 않는 경우 404 Not Found
         if (projectMembers.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        // 프로젝트에 속하지 않은 경우 403 Forbidden
         if (projectMembers.stream().noneMatch(pm -> pm.getMember().getId().equals((
                 (Member) session.getAttribute("loggedInUser")).getId()))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);

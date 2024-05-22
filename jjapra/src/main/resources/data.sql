@@ -1,5 +1,6 @@
-INSERT INTO member (id, password, name, email, phone_num) VALUES ('test1', 'test1','test1','test1@naver.com','010123456478');
-INSERT INTO member (id, password, name, email, phone_num) VALUES ('test2', 'test2','test2','test2@naver.com','010123456479');
+INSERT INTO member (id, password, name, email, phone_num, is_admin) VALUES ('admin', 'admin','admin','admin@admin.com','010123456478', true);
+INSERT INTO member (id, password, name, email, phone_num, is_admin) VALUES ('test1', 'test1','test1','test1@naver.com','010123456478', false);
+INSERT INTO member (id, password, name, email, phone_num, is_admin) VALUES ('test2', 'test2','test2','test2@naver.com','010123456479', false);
 INSERT INTO issue (title, description,writer) values ('제목', '내용','test1');
 INSERT INTO issue (title, description,writer) values ('제목2','내용2','test2');
 INSERT INTO project (title, description) values ('DDing', 'hi');

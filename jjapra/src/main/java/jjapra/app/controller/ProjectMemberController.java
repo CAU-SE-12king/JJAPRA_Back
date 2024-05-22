@@ -19,13 +19,13 @@ public class ProjectMemberController {
     private final ProjectService projectService;
 
     @PostMapping("/projects/{id}")
-    public ProjectMember save(@PathVariable("id") Integer id, @RequestBody Role role, HttpSession session) {
+    public ProjectMember save(@PathVariable("id") Integer id, @RequestBody AddProjectMemberRequest request, HttpSession session) {
         Project project = projectService.findById(id);
         if (project == null) {
             return null;
         }
         Member member = (Member) session.getAttribute("loggedInUser");
 
-        return projectMemberService.save(role, project, member);
+        return projectMemberService.save(request, project, member);
     }
 }

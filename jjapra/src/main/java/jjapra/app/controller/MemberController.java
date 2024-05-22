@@ -46,15 +46,23 @@ public class MemberController {
         }
     }
 
-    // 회원 정보 조회. 회원 ID를 받아서 해당 회원의 정보를 반환
+    // admin 권한으로 로그인한 경우 특정 회원 정보를 조회
     @GetMapping("/members/{id}")
-    public Member getMember(@PathVariable("id") String id) {
-        return memberService.findById(id);
+    public Object getMember(@PathVariable("id") String id, HttpSession session) {
+        if (((Member) session.getAttribute("loggedInUser")).is_admin()) {
+            return memberService.findById(id);
+        }
+        return null;
     }
 
+    // admin 권한으로 로그인한 경우 모든 회원 정보를 조회
+    // 일반 회원으로 로그인한 경우 자신의 정보만 조회
     @GetMapping("/members")
-    public List<Member> getMembers() {
-        return memberService.findAll();
+    public Object getMembers(HttpSession session) {
+        if (((Member) session.getAttribute("loggedInUser")).is_admin()) {
+            return memberService.findAll();
+        }
+        return memberService.findById(((Member) session.getAttribute("loggedInUser")).getId());
     }
 }
 
