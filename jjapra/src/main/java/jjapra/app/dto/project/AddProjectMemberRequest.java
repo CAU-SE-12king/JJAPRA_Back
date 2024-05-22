@@ -18,7 +18,6 @@ public class AddProjectMemberRequest {
     private Role role;
 
     public ProjectMember toEntity(Project project, Member member) {
-        System.out.println("ProjectMember.toEntity@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return ProjectMember.builder()
                 .project(project)
                 .member(member)
